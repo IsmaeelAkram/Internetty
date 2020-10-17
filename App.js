@@ -18,6 +18,7 @@ import {
 import {Appearance} from 'react-native';
 import { NetworkInfo } from "react-native-network-info";
 import {Config} from 'react-native-config';
+import Geolocation from '@react-native-community/geolocation'
 
 const App = () => {
   const colorScheme = Appearance.getColorScheme();
@@ -28,12 +29,17 @@ const App = () => {
   const [gateway, setGateway] = useState("Loading...")
   const [ISP, setISP] = useState("Loading...")
 
-  useEffect(() => {
+  const fetchSSID = () => {
     NetworkInfo.getSSID().then(_ssid => {
       setSSID(_ssid || "Unavailable")
     }).catch(err => {
       setSSID("Unavailable")
     });
+  }
+
+  useEffect(() => {
+    Geolocation.requestAuthorization();
+    fetchSSID();
 
     fetch("https://api.ipify.org/?format=json")
     .then(res => res.json())

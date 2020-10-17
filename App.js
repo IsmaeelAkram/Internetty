@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import {Appearance} from 'react-native';
 import { NetworkInfo } from "react-native-network-info";
+import {Config} from 'react-native-config';
 
 const App = () => {
   const colorScheme = Appearance.getColorScheme();
@@ -26,7 +27,6 @@ const App = () => {
   const [privateIP, setPrivateIP] = useState("Loading...")
   const [gateway, setGateway] = useState("Loading...")
   const [ISP, setISP] = useState("Loading...")
-  const [MAC, setMAC] = useState("Loading...")
 
   useEffect(() => {
     NetworkInfo.getSSID().then(_ssid => {
@@ -39,6 +39,15 @@ const App = () => {
     .then(res => res.json())
     .then(json => {
       setPublicIP(json.ip || "Unavailable")
+
+      fetch(`https://ipinfo.io/${json.ip}/json?token=${Config.IPINFO_TOKEN}`)
+      .then(res => res.json())
+      .then(json => {
+        setISP(json.org || "Unavailable")
+      }).catch(err => {
+        setISP("Unavailable")
+      })
+      
     }).catch(err => {
       setPublicIP("Unavailable")
     })
@@ -86,10 +95,6 @@ const App = () => {
             <View style={styles.detailView}>
               <Text style={[styles.detailValue, colorScheme === 'dark' ? styles.lightText : styles.darkText]}>{ISP}</Text>
               <Text style={[styles.detail, colorScheme === 'dark' ? styles.lightText : styles.darkText]}>Internet service provider</Text>
-            </View>
-            <View style={styles.detailView}>
-              <Text style={[styles.detailValue, colorScheme === 'dark' ? styles.lightText : styles.darkText]}>{MAC}</Text>
-              <Text style={[styles.detail, colorScheme === 'dark' ? styles.lightText : styles.darkText]}>Your MAC address</Text>
             </View>
           </View>
         </ScrollView>

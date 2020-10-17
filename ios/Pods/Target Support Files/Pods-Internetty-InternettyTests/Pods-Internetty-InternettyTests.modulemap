@@ -1,0 +1,6 @@
+module Pods_Internetty_InternettyTests {
+  umbrella header "Pods-Internetty-InternettyTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+module Pods_Internetty {
+  umbrella header "Pods-Internetty-umbrella.h"
+
+  export *
+  module * { export * }
+}
